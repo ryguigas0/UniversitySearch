@@ -1,5 +1,5 @@
-import SearchUniversities from "./SearchUniversities";
-import FavouritedUniversities from "./FavoritedUniversites";
+import SearchUniversities from "./screens/SearchUniversities";
+import FavouritedUniversities from "./screens/FavoritedUniversites";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
