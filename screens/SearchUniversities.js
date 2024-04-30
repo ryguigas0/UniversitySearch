@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Button from "../components/Button"
 import UniversityList from '../components/UniversityList';
 import axios from 'axios';
+import FavouritedListContext from '../contexts/FavouritedListContext';
 
 export default function SearchUniversities({ navigation }) {
+    let { favouritedList, setFavouritedList } = useContext(FavouritedListContext)
     let [universities, setUniversities] = useState([])
 
     let [universityName, setUniversityName] = useState("")
@@ -41,9 +43,13 @@ export default function SearchUniversities({ navigation }) {
         setUniversities(response.data)
     }
 
-    function addToFavourites(uniName) {
+    function addToFavourites(uni) {
         return () => {
-            console.log("adding " + uniName + " to favourites")
+            let aux = favouritedList
+
+            aux.add(uni)
+
+            setFavouritedList(aux)
         }
     }
 

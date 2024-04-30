@@ -7,7 +7,7 @@ export default function UniversityList({ data, itemIdKey, onItemPress }) {
     return <FlatList
         style={styles.universitiesList}
         data={data}
-        renderItem={({ item }) => <UniversityListItem university={item} onPress={onItemPress(item[itemIdKey])} />}
+        renderItem={({ item }) => <UniversityListItem university={item} onPress={onItemPress(item)} />}
         keyExtractor={(item) => item[itemIdKey]} />
 }
 
