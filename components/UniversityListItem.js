@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from "react-native"
+import Button from "./Button"
 
 
-export default function UniversityListItem({ university }) {
+export default function UniversityListItem({ university, onPress }) {
     // console.log({ university })
 
     return <View style={styles.universityListItemContainer}>
-        <Text style={styles.universityListItemText}>{university.name}</Text>
+        <Button title={university.name} style={{ text: styles.universityListItemText }} onPress={onPress} />
     </View>
 }
 

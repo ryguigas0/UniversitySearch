@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { FlatList, StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 import Button from "../components/Button"
-
-
-import UniversityListItem from '../components/UniversityListItem'
+import UniversityList from '../components/UniversityList';
 
 export default function SearchUniversities({ navigation }) {
     let [universities, setUniversities] = useState([{
@@ -78,11 +76,18 @@ export default function SearchUniversities({ navigation }) {
         "alpha_two_code": "GB",
         "state-province": null
     }])
+
     let [universityName, setUniversityName] = useState("")
     let [universityCountry, setUniversityCountry] = useState("")
 
     function changeScreens() {
         navigation.navigate("Favourites")
+    }
+
+    function addToFavourites(uniName) {
+        return () => {
+            console.log("adding " + uniName + " to favourites")
+        }
     }
 
     return <View style={styles.container}>
@@ -108,11 +113,7 @@ export default function SearchUniversities({ navigation }) {
                 onPress={changeScreens} />
         </View>
         <View style={{ flex: 1 }}>
-            <FlatList
-                style={styles.universitiesList}
-                data={universities}
-                renderItem={({ item }) => <UniversityListItem university={item} />}
-                keyExtractor={(uni) => uni.name} />
+            <UniversityList data={universities} itemIdKey={'name'} onItemPress={addToFavourites} />
         </View>
     </View>
 }
@@ -156,10 +157,4 @@ const styles = StyleSheet.create({
             fontSize: 20
         }
     },
-    universitiesList: {
-        margin: 8,
-        paddingHorizontal: 16,
-        paddingTop: 16,
-        overflow: 'scroll'
-    }
 });
