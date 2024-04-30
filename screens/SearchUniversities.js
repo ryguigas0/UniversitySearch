@@ -1,87 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Button from "../components/Button"
 import UniversityList from '../components/UniversityList';
+import axios from 'axios';
 
 export default function SearchUniversities({ navigation }) {
-    let [universities, setUniversities] = useState([{
-        "name": "West Herts College",
-        "domains": ["student.westherts.ac.uk", "westherts.ac.uk"],
-        "web_pages": ["https://westherts.ac.uk"],
-        "country": "United Kingdom",
-        "alpha_two_code": "GB",
-        "state-province": null
-    },
-    {
-        "name": "National Institute of Applied Sciences of Toulouse",
-        "domains": ["insa-toulouse.fr"],
-        "web_pages": ["https://insa-toulouse.fr"],
-        "country": "France",
-        "alpha_two_code": "FR",
-        "state-province": null
-    },
-    {
-        "name": "Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)",
-        "domains": ["mbzuai.ac.ae"],
-        "web_pages": ["https://mbzuai.ac.ae/"],
-        "country": "United Arab Emirates",
-        "alpha_two_code": "AE",
-        "state-province": "Abu Dhabi"
-    },
-    {
-        "name": "Centro Universitário de Brasília, UNICEUB",
-        "domains": ["sempreceub.com", "uniceub.br"],
-        "web_pages": ["https://www.uniceub.br"],
-        "country": "Brazil",
-        "alpha_two_code": "BR",
-        "state-province": null
-    },
-    {
-        "name": "Kharkiv National University",
-        "domains": ["student.karazin.ua", "karazin.ua"],
-        "web_pages": ["https://karazin.ua"],
-        "country": "Ukraine",
-        "alpha_two_code": "UA",
-        "state-province": null
-    },
-    {
-        "name": "Universidad Técnica Federico Santa María",
-        "domains": ["usm.cl"],
-        "web_pages": ["https://usm.cl"],
-        "country": "Chile",
-        "alpha_two_code": "CL",
-        "state-province": null
-    },
-    {
-        "name": "IÉSEG School of Management",
-        "domains": ["ieseg.fr"],
-        "web_pages": ["https://ieseg.fr"],
-        "country": "France",
-        "alpha_two_code": "FR",
-        "state-province": null
-    },
-    {
-        "name": "Sun Yat-Sen University",
-        "domains": ["mail2.sysu.edu.cn", "mail.sysu.edu.cn"],
-        "web_pages": ["https://sysu.edu.cn"],
-        "country": "China",
-        "alpha_two_code": "CN",
-        "state-province": null
-    },
-    {
-        "name": "Royal Holloway University of London",
-        "domains": ["rhul.ac.uk"],
-        "web_pages": ["https://rhul.ac.uk"],
-        "country": "United Kingdom",
-        "alpha_two_code": "GB",
-        "state-province": null
-    }])
+    let [universities, setUniversities] = useState([])
 
     let [universityName, setUniversityName] = useState("")
     let [universityCountry, setUniversityCountry] = useState("")
 
+    useEffect(() => {
+        searchUniversities(null, null);
+    }, []);
+
     function changeScreens() {
         navigation.navigate("Favourites")
+    }
+
+    async function searchUniversities(name, country) {
+        if (name === "" && country === "") {
+            return
+        }
+
+        let queryParams = {}
+        if (name !== "") {
+            queryParams.name = name
+        }
+
+        if (country !== "") {
+            queryParams.country = country
+        }
+
+        let baseUrl = 'http://universities.hipolabs.com/search'
+
+        const response = await axios.get(baseUrl, { params: queryParams })
+
+        console.log({ queryParams, response })
+
+        setUniversities(response.data)
     }
 
     function addToFavourites(uniName) {
@@ -95,18 +52,21 @@ export default function SearchUniversities({ navigation }) {
             <TextInput
                 style={styles.universitiesFilter}
                 value={universityName}
-                placeholder={"University name"} onchange={setUniversityName} />
+                placeholder={"University name"}
+                onChangeText={setUniversityName} />
             <TextInput
                 style={styles.universitiesFilter}
                 value={universityCountry}
                 placeholder={"University country name"}
-                onchange={setUniversityCountry} />
+                onChangeText={setUniversityCountry} />
         </View>
         <View style={styles.universitiesButtonGroup}>
             <Button
                 style={styles.universitiesButton}
                 title='Search'
-                onPress={changeScreens} />
+                onPress={async function () {
+                    return searchUniversities(universityName, universityCountry)
+                }} />
             <Button
                 style={styles.universitiesButton}
                 title='Favorites'

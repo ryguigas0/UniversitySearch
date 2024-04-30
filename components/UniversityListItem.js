@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     universityListItemText: {
-        fontSize: 20
+        fontSize: 20,
+        maxWidth: "18rem"
     }
 })
